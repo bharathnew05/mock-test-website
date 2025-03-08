@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 300px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        button { padding: 10px; background: green; color: white; border: none; cursor: pointer; }
+        button:hover { background: darkgreen; }
+    </style>
+</head>
+<body>
+
+    <h2>Sign Up</h2>
+    <div class="container">
+        <input type="text" id="newUser" placeholder="Enter Username">
+        <input type="password" id="newPass" placeholder="Enter Password">
+        <button onclick="register()">Sign Up</button>
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+    <script>
+        function register() {
+            const user = document.getElementById("newUser").value;
+            const pass = document.getElementById("newPass").value;
+
+            if (user && pass) {
+                localStorage.setItem(user, pass); // Store credentials
+                alert("Registration successful! You can now log in.");
+                window.location.href = "login.html";
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+    </script>
+
+</body>
+</html>
