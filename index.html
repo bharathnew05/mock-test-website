@@ -49,7 +49,8 @@
         <button class="logout-btn" onclick="logout()">Logout</button>
         <p id="result"></p>
     </div>
-<a href="add_questions.html"><button>Manage Questions</button></a>
+    <a href="subjects.html"><button>Select Subject</button></a>
+    <a href="add_questions.html"><button>Manage Questions</button></a>
 
     <script>
         // Redirect to login if user is not logged in
@@ -58,21 +59,23 @@
             window.location.href = "login.html";
         }
 
-        let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+        // Get the selected subject from localStorage
+        let selectedSubject = localStorage.getItem("selectedSubject");
 
-if (quiz.length === 0) {
-    // Get the selected subject from localStorage (default to "mathQuiz")
-let selectedSubject = localStorage.getItem("selectedSubject") || "mathQuiz";
-let quiz = JSON.parse(localStorage.getItem(selectedSubject)) || [];
+        // If no subject is selected, ask the user to choose one
+        if (!selectedSubject) {
+            alert("Please select a subject first!");
+            window.location.href = "subjects.html";
+        }
 
-if (quiz.length === 0) {
-    alert("No questions available! Please add questions first.");
-    window.location.href = "subjects.html";  // Redirect to subject selection page
-}
+        // Load quiz questions from the selected subject
+        let quiz = JSON.parse(localStorage.getItem(selectedSubject)) || [];
 
-    localStorage.setItem("quiz", JSON.stringify(quiz));  // Save default questions
-}
-
+        // If no questions are found, ask the user to add questions
+        if (quiz.length === 0) {
+            alert("No questions available for this subject. Please add questions first.");
+            window.location.href = "subjects.html";  // Redirect to subject selection page
+        }
 
         let currentQuestion = 0;
         let score = 0;
