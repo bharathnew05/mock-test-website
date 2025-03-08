@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Subject</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        button { width: 100%; padding: 10px; margin: 10px 0; background: blue; color: white; border: none; cursor: pointer; }
+        button:hover { background: darkblue; }
+    </style>
+</head>
+<body>
+
+    <h2>Select a Subject</h2>
+    <div class="container">
+        <a href="math.html"><button>Math</button></a>
+        <a href="science.html"><button>Science</button></a>
+        <a href="english.html"><button>English</button></a>
+        <br><br>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Redirect to login if user is not logged in
+        if (!localStorage.getItem("loggedInUser")) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+    </script>
+
+</body>
+</html>
