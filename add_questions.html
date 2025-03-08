@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Questions</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; }
+        button { background: green; color: white; border: none; cursor: pointer; }
+        button:hover { background: darkgreen; }
+        .logout-btn { background: red; }
+        .logout-btn:hover { background: darkred; }
+        .questions-list { text-align: left; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Add New Questions</h2>
+    <div class="container">
+        <input type="text" id="question" placeholder="Enter question">
+        <input type="text" id="option1" placeholder="Option 1">
+        <input type="text" id="option2" placeholder="Option 2">
+        <input type="text" id="option3" placeholder="Option 3">
+        <input type="text" id="option4" placeholder="Option 4">
+        <input type="text" id="answer" placeholder="Correct Answer">
+        <button onclick="addQuestion()">Add Question</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <h3>Existing Questions:</h3>
+        <ul id="questionsList" class="questions-list"></ul>
+    </div>
+
+    <script>
+        // Redirect to login if user is not logged in
+        if (!localStorage.getItem("loggedInUser")) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        }
+
+        function addQuestion() {
+            const question = document.getElementById("question").value;
+            const option1 = document.getElementById("option1").value;
+            const option2 = document.getElementById("option2").value;
+            const option3 = document.getElementById("option3").value;
+            const option4 = document.getElementById("option4").value;
+            const answer = document.getElementById("answer").value;
+
+            if (!question || !option1 || !option2 || !option3 || !option4 || !answer) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+            quiz.push({ 
+                question: question, 
+                options: [option1, option2, option3, option4], 
+                answer: answer 
+            });
+
+            localStorage.setItem("quiz", JSON.stringify(quiz));
+            alert("Question added successfully!");
+            loadQuestions();  // Refresh the question list
+        }
+
+        function loadQuestions() {
+            const quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+            const questionsList = document.getElementById("questionsList");
+            questionsList.innerHTML = "";
+
+            quiz.forEach((q, index) => {
+                const li = document.createElement("li");
+                li.textContent = `${index + 1}. ${q.question} (Answer: ${q.answer})`;
+                questionsList.appendChild(li);
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+
+        loadQuestions();  // Load existing questions on page load
+    </script>
+
+</body>
+</html>
