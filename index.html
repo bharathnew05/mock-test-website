@@ -61,10 +61,15 @@
         let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
 
 if (quiz.length === 0) {
-    quiz = [
-        { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
-        { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], answer: "Paris" }
-    ];
+    // Get the selected subject from localStorage (default to "mathQuiz")
+let selectedSubject = localStorage.getItem("selectedSubject") || "mathQuiz";
+let quiz = JSON.parse(localStorage.getItem(selectedSubject)) || [];
+
+if (quiz.length === 0) {
+    alert("No questions available! Please add questions first.");
+    window.location.href = "subjects.html";  // Redirect to subject selection page
+}
+
     localStorage.setItem("quiz", JSON.stringify(quiz));  // Save default questions
 }
 
