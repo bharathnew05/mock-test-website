@@ -4,40 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .container { max-width: 300px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-        input { width: 100%; padding: 10px; margin: 5px 0; }
-        button { padding: 10px; background: blue; color: white; border: none; cursor: pointer; }
-        button:hover { background: darkblue; }
-    </style>
+    <script type="module" src="firebase-config.js"></script>
 </head>
 <body>
-
     <h2>Login</h2>
-    <div class="container">
-        <input type="text" id="username" placeholder="Enter Username">
-        <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="login()">Login</button>
-        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-    </div>
-<script type="module" src="firebase-config.js"></script>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
 
-    <script>
-        function login() {
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value;
-            const storedPass = localStorage.getItem(user);
+    <!-- Google Login Button -->
+    <button id="google-login">Login with Google</button>
 
-            if (storedPass && storedPass === pass) {
-                localStorage.setItem("loggedInUser", user);
-                alert("Login successful!");
-                window.location.href = "index.html";
-            } else {
-                alert("Invalid credentials. Try again.");
-            }
-        }
+    <script type="module">
+        import { signInWithGoogle } from "./firebase-config.js";
+
+        document.getElementById("google-login").addEventListener("click", signInWithGoogle);
     </script>
-
 </body>
 </html>
