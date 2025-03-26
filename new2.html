@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <h2 class="text-2xl font-bold text-center text-blue-600">Mock Test Exam</h2>
+        <div id="quiz-container" class="mt-4">
+            <p id="question" class="text-lg font-medium"></p>
+            <div id="options" class="mt-3 space-y-2"></div>
+            <button onclick="nextQuestion()" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                Next
+            </button>
+            <p id="result" class="text-center font-semibold mt-4"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
+            { question: "Which language is used for AI?", options: ["Java", "C++", "Python", "Ruby"], answer: "Python" },
+            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                document.getElementById("quiz-container").innerHTML = `
+                    <h2 class="text-2xl font-bold text-center text-green-600">Quiz Over!</h2>
+                    <p class="text-lg text-center">Your score: <span class="text-blue-600">${score}/${questions.length}</span></p>
+                    <button onclick="restartQuiz()" class="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300">Restart</button>
+                `;
+                return;
+            }
+
+            const q = questions[currentQuestionIndex];
+            document.getElementById("question").innerText = q.question;
+            document.getElementById("options").innerHTML = q.options.map(option => 
+                `<button class="w-full bg-gray-200 py-2 rounded-lg hover:bg-gray-400 transition duration-300" onclick="checkAnswer('${option}')">${option}</button>`
+            ).join("");
+        }
+
+        function checkAnswer(answer) {
+            if (answer === questions[currentQuestionIndex].answer) score++;
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            loadQuestion();
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+
+</body>
+</html>
