@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAIIB - Advanced Bank Management Mock Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .quiz-container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px gray;
+            max-width: 800px;
+            margin: auto;
+        }
+        .question {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .options {
+            margin: 10px 0;
+        }
+        .options label {
+            display: block;
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CAIIB - Advanced Bank Management Mock Test</h1>
+    <div class="quiz-container">
+        <form id="quizForm">
+            <div id="quiz"></div>
+            <button type="button" onclick="submitQuiz()">Submit</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Which of the following is a characteristic of an efficient market?",
+                options: ["No transaction costs", "Prices reflect all available information", "Investors cannot earn excess returns consistently", "All of the above"],
+                correct: 3
+            },
+            {
+                question: "In credit appraisal, which of the following ratios is most relevant?",
+                options: ["Current ratio", "Debt-equity ratio", "Return on assets", "All of the above"],
+                correct: 3
+            },
+            {
+                question: "Which risk is associated with fluctuations in interest rates?",
+                options: ["Market risk", "Credit risk", "Operational risk", "Liquidity risk"],
+                correct: 0
+            },
+            {
+                question: "Capital Adequacy Ratio (CAR) is used to measure a bank’s:",
+                options: ["Profitability", "Risk-taking ability", "Liquidity", "Market position"],
+                correct: 1
+            },
+            {
+                question: "Which of the following is NOT a function of the Reserve Bank of India?",
+                options: ["Issuing currency", "Regulating the stock market", "Controlling monetary policy", "Supervising banks"],
+                correct: 1
+            }
+            // Add more questions up to 50
+        ];
+
+        function loadQuiz() {
+            const quizContainer = document.getElementById("quiz");
+            quizContainer.innerHTML = "";
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="question">${index + 1}. ${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <label>
+                                <input type="radio" name="q${index}" value="${i}"> ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.innerHTML += questionHtml;
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            let output = "<h2>Quiz Results</h2>";
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected) {
+                    const answer = parseInt(selected.value);
+                    if (answer === q.correct) {
+                        score++;
+                    } else {
+                        output += `<p><b>Question ${index + 1}:</b> ${q.question}<br>
+                                   Your Answer: ${q.options[answer]}<br>
+                                   Correct Answer: ${q.options[q.correct]}</p>`;
+                    }
+                } else {
+                    output += `<p><b>Question ${index + 1}:</b> ${q.question}<br>
+                               <span style="color: red;">No answer selected!</span><br>
+                               Correct Answer: ${q.options[q.correct]}</p>`;
+                }
+            });
+
+            output = `<h3>Your Score: ${score} / ${questions.length}</h3>` + output;
+            document.getElementById("result").innerHTML = output;
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
