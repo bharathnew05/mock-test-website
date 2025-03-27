@@ -1,88 +1,132 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Test Exam</title>
+    <title>Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+            margin: 20px;
         }
-        .container {
-            max-width: 500px;
-            background: white;
-            padding: 20px;
-            margin: 50px auto;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        .question {
+            margin-bottom: 15px;
         }
-        button {
-            background: #007bff;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-        button:hover {
-            background: #0056b3;
+        #results {
+            display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Mock Test Exam</h2>
-        <p id="question"></p>
-        <div id="options"></div>
-        <button onclick="nextQuestion()">Next</button>
-        <p id="result"></p>
-    </div>
+<div id="quiz-container">
+    <!-- Quiz questions will be injected here -->
+</div>
+<button id="next" style="display:none;">Next</button>
+<button id="submit" style="display:none;">Submit</button>
+<div id="results"></div>
 
-    <script>
-        const questions = [
-            { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
-            { question: "Which language is used for AI?", options: ["Java", "C++", "Python", "Ruby"], answer: "Python" },
-            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" }
-        ];
+<script>
+    const questions = [
+        { question: "Calculate the Drawing Power in Bank Management.", options: ["Rs. 985000", "Rs. 1035000", "Rs. 1065000", "Rs. 1125000"], answer: 1 },
+        { question: "When a bond sells at a discount, its coupon rate is...", options: ["Greater than Yield to maturity", "Less than the current yield", "Less than the current yield and the current yield is less than Yield to maturity", "Greater than the current yield"], answer: 2 },
+        { question: "The number of pieces must be produced to avoid loss is...", options: ["600", "700", "800", "900"], answer: 1 },
+        { question: "What is the primary purpose of studying Transactional Analysis?", options: ["To know why we procrastinate", "To know why we behave differently at different times", "To know why we cry", "To know why we get angry"], answer: 1 },
+        { question: "In a Bank branch, who has a Type A personality?", options: ["Branch Manager", "Assistant Manager", "Head Cashier", "Clerk"], answer: 1 },
+        { question: "What is take-out financing?", options: ["Inter-bank loan transactions", "Providing finance for longer duration projects", "Providing interest-free loans", "Borrowing from international institutions"], answer: 1 },
+        { question: "Which is a method of selecting samples from a population?", options: ["Judgement sampling", "Random sampling", "Probability sampling", "All the above"], answer: 3 },
+        { question: "The median marks of the given students is...", options: ["24", "32", "34", "35"], answer: 1 },
+        { question: "The probability of loss that remains to systems after security measures is called...", options: ["Residual risk", "Control risk", "Inherent risk", "Operational risk"], answer: 0 },
+        { question: "Provision Coverage Ratio refers to the ratio of...", options: ["Provision for NPA to gross non-performing assets", "Provision for NPA to total assets", "Gross non-performing assets to advances", "Provision for NPA to total equity"], answer: 0 },
+        { question: "Performance Appraisal is also known as...", options: ["Performance review and Annual review", "Loss review and Annual review", "Performance review and Loss review", "Discount review and Loss review"], answer: 1 },
+        { question: "What is the new discount rate if the discount factor is 0.8333?", options: ["10%", "15%", "20%", "25%"], answer: 2 },
+        { question: "Foreign LC requirement DA Basis calculation results in...", options: ["1.00", "2.32", "4.32", "5.32"], answer: 2 },
+        { question: "In a survey, the estimate of population proportion is...", options: ["0.3333", "0.5", "0.6666", "1.0"], answer: 0 },
+        { question: "Which of the following is most important in a compliance policy?", options: ["Tone at the top", "Integration across the enterprise", "Silos", "Resources"], answer: 0 },
+        { question: "Possibility of regulatory action of closing down business is...", options: ["Risk annihilation", "Legal risk", "Operational risk", "Regulatory risk"], answer: 3 },
+        { question: "Who is responsible for compliance in a bank branch?", options: ["Chief Compliance Officer", "Functional head", "Senior officer", "Special official"], answer: 1 },
+        { question: "In the Johari Window, known to self and known to others is called...", options: ["Arena", "Blind", "Closed", "Dark"], answer: 0 },
+        { question: "Vigilance angle may be discernible when a person...", options: ["Seems to comply with unlawful instructions", "Has exceeded his discretionary powers", "Has abused his position", "All of the above"], answer: 3 },
+        { question: "What is the primary focus of HRD as a subsystem of HRM?", options: ["Recruitment", "Performance appraisal", "Compensation", "Training and development"], answer: 3 },
+        { question: "An example of tacit knowledge is...", options: ["A documented procedure", "A research report", "The expertise of an experienced employee", "An instructional video"], answer: 2 },
+        { question: "Which of the following is not a function of Human Resource Management?", options: ["Recruitment", "Training", "Financial management", "Performance management"], answer: 2 },
+        // Add additional questions here...
+        // This list must be filled up to 50 questions.
+    ];
 
-        let currentQuestionIndex = 0;
-        let score = 0;
+    let currentQuestionIndex = 0; // Track current question
+    let userAnswers = new Array(questions.length).fill(-1); // Store user answers
 
-        function loadQuestion() {
-            if (currentQuestionIndex >= questions.length) {
-                document.getElementById("result").innerText = `Quiz Over! Your score: ${score}/${questions.length}`;
-                document.getElementById("question").style.display = "none";
-                document.getElementById("options").style.display = "none";
-                document.querySelector("button").style.display = "none";
-                return;
+    function displayQuestions() {
+        const container = document.getElementById("quiz-container");
+        container.innerHTML = ""; // Clear previous questions to avoid duplication
+        const questionsToDisplay = questions.slice(currentQuestionIndex, currentQuestionIndex + 5);
+        
+        questionsToDisplay.forEach((q, index) => {
+            const questionHTML = `
+                <div class="question">
+                    <p>${(currentQuestionIndex + index + 1)}) ${q.question}</p>
+                    ${q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="question${currentQuestionIndex + index}" value="${i}">
+                            ${option}
+                        </label><br />
+                    `).join('')}
+                </div>
+            `;
+            container.innerHTML += questionHTML;
+        });
+
+        document.getElementById("next").style.display = currentQuestionIndex + 5 >= questions.length ? 'none' : 'inline'; // Show next button
+        document.getElementById("submit").style.display = currentQuestionIndex + 5 >= questions.length ? 'inline' : 'none'; // Show submit button
+    }
+
+    document.getElementById("next").onclick = function() {
+        collectAnswers();
+        currentQuestionIndex += 5;
+        displayQuestions();
+    };
+
+    document.getElementById("submit").onclick = function() {
+        collectAnswers();
+        displayResults();
+    };
+
+    function collectAnswers() {
+        const radios = document.querySelectorAll(`input[name^="question"]`);
+        radios.forEach(radio => {
+            if (radio.checked) {
+                userAnswers[parseInt(radio.name.replace('question', ''))] = parseInt(radio.value);
             }
-            
-            const q = questions[currentQuestionIndex];
-            document.getElementById("question").innerText = q.question;
-            document.getElementById("options").innerHTML = q.options
-                .map(option => `<button onclick="checkAnswer('${option}')">${option}</button>`)
-                .join("");
-        }
+        });
+    }
 
-        function checkAnswer(answer) {
-            if (answer === questions[currentQuestionIndex].answer) {
-                score++;
+    function displayResults() {
+        const results = document.getElementById("results");
+        results.innerHTML = "<h2>Results</h2><ul>";
+
+        let correctCount = 0;
+        questions.forEach((q, index) => {
+            let resultClass = "";
+            if (userAnswers[index] === q.answer) {
+                correctCount++;
+                resultClass = "correct";
+                results.innerHTML += `<li class="${resultClass}">Q${index + 1}: Correct</li>`;
+            } else {
+                results.innerHTML += `<li class="${resultClass}">Q${index + 1}: ${q.options[q.answer]} is correct, but you selected ${q.options[userAnswers[index]]}</li>`;
             }
-            currentQuestionIndex++;
-            loadQuestion();
-        }
+        });
 
-        function nextQuestion() {
-            loadQuestion();
-        }
+        results.innerHTML += `</ul><h3>You got ${correctCount} out of ${questions.length} correct!</h3>`;
+        results.style.display = "block";
+        document.getElementById("quiz-container").style.display = "none"; // Hide questions
+        document.getElementById("next").style.display = "none"; // Hide next button
+        document.getElementById("submit").style.display = "none"; // Hide submit button
+    }
 
-        loadQuestion();
-    </script>
-
+    // Start the quiz on page load
+    displayQuestions();
+</script>
 </body>
 </html>
